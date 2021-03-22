@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Build
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +20,8 @@ jobs:
       run: ./configure --enable-static --disable-avs --disable-swscale --disable-lavf --disable-ffms --disable-gpac --disable-lsmash --disable-cli
     - name: make
       run: make -j
+    - name: ls
+      run: ls  -l
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1.0.0
@@ -31,3 +32,12 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: true
         prerelease: true
+    - name: Deploy
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: libx264.a
+        asset_name: libx264.a
+        asset_content_type: application/octet-stream
