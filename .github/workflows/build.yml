@@ -13,6 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Installing dependencies
+      run: |
+        sudo apt update
+        sudo apt install nasm
     - name: configure
       run: ./configure --enable-static --disable-avs --disable-swscale --disable-lavf --disable-ffms --disable-gpac --disable-lsmash --disable-cli
     - name: make
